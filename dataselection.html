@@ -1,0 +1,183 @@
+<html>
+<head><title>Selecting Data></title></head>
+<link rel="stylesheet" type="text/css" href="Styles.css">
+<body>
+<p><img src="C:\Users\Antho\OneDrive\Pictures\Comp Logo.jpg" alt="Logo" style="float:left;width:100px;height:100px;">
+<p><img src="C:\Users\Antho\OneDrive\Pictures\Comp Logo.jpg" alt="Logo" style="float:right;width:100px;height:100px;">
+<h2>================Customer Information Registry================</h2>
+<br />
+<!-- Here is where you will have your data inputted by user to query -->
+Customer ID: <input id="cid" type="type" data-key="CustomerID" class="input-data"><br />
+First Name: <input id="fname" type="type" data-key="FirstName" class="input-data"><br />
+Middle Name: <input id="mname" type="type" data-key="MiddleName" class="input-data"><br />
+Last Name: <input id="lname" type="type" data-key="LastName" class="input-data"><br />
+Email Address: <input id="email" type="type" data-key="Email" class="input-data"><br />
+Mobile Number: <input id="mblenmb" type="type" data-key="Mobile" class="input-data"><br />
+<br />
+<button id="Updatebtn">UPDATE INFO</button>
+<button id="Deletebtn">DELETE CUSTOMER</button>
+<button id="Addbtn">ADD CUSTOMER</button>
+<button id="Findbtn">FIND CUSTOMER</button>
+<br />
+<br />
+
+<h>Customer - Order Form</h1>
+
+ <table width="40%" id="alignment" >
+<tr>  
+<th>Computer Hardware</th> 
+<th></th>
+<th>Price($.)</th>
+<th>Quantity</th> 
+<th>Total($.)</th>
+</tr> 
+<tr>
+<td>Monitors</td> 
+<td> - </td>
+<td>300.00</td>
+<td><input id="qty1" type="type" data-key="Quantity1" class="input-data"></td>
+<td><input id="ttl1" type="type" data-key="Total1" class="input-data"></td> 
+</tr> 
+<tr>
+<td>Keyboards</td>
+<td> - </td> 
+<td>50.00</td>
+<td><input id="qty2" type="type" data-key="Quantity2" class="input-data"></td>
+<td><input id="ttl2" type="type" data-key="Total2" class="input-data"></td>  
+</tr>
+<tr> 
+<td>Mouses</td>
+<td> - </td>  
+<td>30.00</td>
+<td><input id="qty3" type="type" data-key="Quantity3" class="input-data"></td>
+<td><input id="ttl3" type="type" data-key="Total3" class="input-data"></td> 
+</tr> 
+<tr>  
+<td>Headsets </td>
+<td> - </td> 
+<td>100.00</td> 
+<td><input id="qty4" type="type" data-key="Quantity4" class="input-data"></td>
+<td><input id="ttl4" type="type" data-key="Total4" class="input-data"></td> 
+</tr>  
+<tr>
+<td>Webcam</td>
+<td> - </td> 
+<td>70.00</td>
+<td><input id="qty5" type="type" data-key="Quantity5" class="input-data"></td>
+<td><input id="ttl5" type="type" data-key="Total5" class="input-data"></td> 
+</tr>
+<tr>
+<td></td> 
+<td></td> 
+<td><button id="Totalbtn">TOTAL</button></td>
+<td><button id="Clearbtn">CLEAR</button></td>
+</tr>
+</tr>
+</table>
+
+<script type="module">
+// Import the functions you need from the SDKs you need 
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use 
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration 
+  const firebaseConfig = {
+    apiKey: "AIzaSyD8xLxMWylqDAvrh5Jt8FkiHbuzwuXxFqM",
+    authDomain: "unit-4-order-form-table.firebaseapp.com",
+    databaseURL: "https://unit-4-order-form-table-default-rtdb.firebaseio.com",
+    projectId: "unit-4-order-form-table",
+    storageBucket: "unit-4-order-form-table.appspot.com",
+    messagingSenderId: "218116037877",
+    appId: "1:218116037877:web:04989fb5e2dbb15841b9bc"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  import {getDatabase, ref, push, set, get, child, update, remove, query, startAt, endAt, orderByChild} 
+  from "https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js";
+  
+  const db = getDatabase();
+
+  //variables to retrieve data from the inputs and hold them
+  var cidbox = document.getElementById('cid');
+  var fnamebox = document.getElementById('fname');
+  var mnamebox = document.getElementById('mname');
+  var lnamebox = document.getElementById('lname');
+  var emailbox = document.getElementById('email');
+  var mblenmbbox = document.getElementById('mblenmb');
+  var UpdateBtn = document.getElementById('Updatebtn');
+  var DeleteBtn = document.getElementById('Deletebtn');
+  var AddBtn = document.getElementById('Addbtn');
+  var FindBtn = document.getElementById('Findbtn');
+  var TotalBtn = document.getElementById('Totalbtn');
+
+
+ 	//The function used to find records within the database table referenced
+	function FindData(){
+	const dbref = ref(db);
+
+	get(child(dbref, "Customers/" + cidbox.value))
+    .then((snapshot) => {
+        snapshot.forEach((doc) => {
+            var str = ""
+            doc.forEach((data) => {
+            str = str + "\n" + data.key + ": " + data.val();
+            });
+            alert(str);
+        });
+    })
+	}
+	FindBtn.addEventListener('click',FindData);
+
+
+//The function used to insert records within the database table referenced
+	function AddData(){
+	const customerListRef = ref(db, "Customers/" + cidbox.value);
+	const newCustomerRef = customerListRef;
+
+	set(newCustomerRef, {
+			CustomerID: cidbox.value,
+			FirstName: fnamebox.value,
+			MiddleName: mnamebox.value,
+			LastName: lnamebox.value,
+			Email: emailbox.value,
+			Mobile: mblenmbbox.value
+		});
+    
+	}
+	AddBtn.addEventListener('click',AddData);
+
+//The function used to delete records within the database table referenced
+	function DeleteData(){
+	const dbref = ref(db);
+
+	remove(ref(db, "Customers/" + cidbox.value))
+	}
+	DeleteBtn.addEventListener('click',DeleteData);
+
+//The function used to update records within the database table referenced
+	function UpdateData(){
+	const customerListRef = ref(db, "Customers/" + cidbox.value);
+	const newCustomerRef = customerListRef;
+
+	update(newCustomerRef, {
+			CustomerID: cidbox.value,
+			FirstName: fnamebox.value,
+			MiddleName: mnamebox.value,
+			LastName: lnamebox.value,
+			Email: emailbox.value,
+			Mobile: mblenmbbox.value
+		});
+    
+	}
+	UpdateBtn.addEventListener('click',UpdateData);	
+
+//This function is used to calculate the totals for orders made
+	function MultiplyOrder(){
+	var q1 = parseInt(document.getElementById('qty1').value);
+	var product1 = q1 * 300;
+	document.getElementById('ttl1').value = product1;
+	}
+	TotalBtn.addEventListener('click',MultiplyOrder);		
+</script>
