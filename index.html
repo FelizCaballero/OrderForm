@@ -176,7 +176,14 @@ Mobile Number: <input id="mblenmb" type="type" data-key="Mobile" class="input-da
 //This function is used to calculate the totals for orders made
 	function MultiplyOrder(){
 	var q1 = parseInt(document.getElementById('qty1').value);
-	var product1 = q1 * 300;
+	var product1
+
+	if (q1 < 10){
+	product1 = q1 * 300;
+	}
+	else{ 
+	product1 = (q1 * 300) - 100;
+	}
 	document.getElementById('ttl1').value = product1;
 	}
 	TotalBtn.addEventListener('click',MultiplyOrder);		
